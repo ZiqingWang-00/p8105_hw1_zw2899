@@ -1,0 +1,18 @@
+---
+title: "p8105_hw1_zw2899"
+author: "Ziqing Wang"
+date: "2022-09-21"
+output: github_document
+---
+
+Load the penguins data set
+```{r}
+data("penguins", package = "palmerpenguins")
+```
+
+The names of all variables in the penguins dataset are `r names(penguins)`.
+
+Here is a preview of the data set:   `r skimr::skim(penguins)`
+
+
+
