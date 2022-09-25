@@ -5,31 +5,41 @@ date: "2022-09-21"
 output: github_document
 ---
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(ggplot2)
 ```
+
 # Problem 1 
-Load the penguins data set
+
+## Load the penguins data set 
+
 ```{r}
 data("penguins", package = "palmerpenguins")
 ```
 
-The penguin dataset contains `r ncol(penguins)` columns and `r nrow(penguins)` rows. The data contains three different penguine species (`r unique(penguins$species)`) from three different islands (`r unique(penguins$island)`). All data points were collected in years `r unique(penguins$year)`. `r table(penguins$sex)["female"]` of the included penguins are female, while `r table(penguins$sex)["male"]` are male. The mean flipper length in mm is `r round(mean(penguins$flipper_length_mm, na.rm=T), 2)`, ignoring missing values in this variable.
+## A brief description of the penguins data set
 
-Below is a scatterplot 
-```{r}
+The penguin dataset contains `r ncol(penguins)` columns and `r nrow(penguins)` rows. The data contains three different penguine species (`r unique(penguins$species)`) from three different islands (`r unique(penguins$island)`). All data points were collected in years `r unique(penguins$year)`. `r table(penguins$sex)["female"]` of the included penguins are female, while `r table(penguins$sex)["male"]` are male. The range of bill length in mm is [`r round(range(penguins$bill_length_mm, na.rm=T), 2)`] with a mean of `r round(mean(penguins$bill_length_mm, na.rm=T), 2)` and a median of `r round(median(penguins$bill_length_mm, na.rm=T), 2)`. The range of bill depth in mm is [`r round(range(penguins$bill_depth_mm, na.rm=T), 2)`] with a mean of `r round(mean(penguins$bill_depth_mm, na.rm=T), 2)` and a median of `r round(median(penguins$bill_depth_mm, na.rm=T), 2)`. The range of body mass in grams is [`r round(range(penguins$body_mass_g, na.rm=T), 2)`] with a mean of `r round(mean(penguins$body_mass_g, na.rm=T), 2)` and a median of `r round(median(penguins$body_mass_g, na.rm=T), 2)`. The range of flipper length in mm is [`r round(range(penguins$flipper_length_mm, na.rm=T), 2)`] with a mean of `r round(mean(penguins$flipper_length_mm, na.rm=T), 2)` and a median of `r round(median(penguins$flipper_length_mm, na.rm=T), 2)`. Missing values in each variable were ignored for all above calculations.
+
+## A piece of visualization
+
+Below is a scatterplot of flipper length vs. bill length, colored by species:
+```{r, warning=FALSE}
 ggplot(penguins, aes(x=bill_length_mm, y=flipper_length_mm, color=species)) + 
   geom_point() +
   xlab("bill length (mm)") + ylab("flipper length (mm)") +
   ggtitle("flipper length vs. bill length by species")
+```
 
+We save the diagram as a pdf file in this working directory:
+```{r, warning=FALSE}
 ggsave("flipper_vs_bill_scatter_plot.pdf", height=4, width=5)
 ```
 
 # Problem 2
 
-Create the specified data frame:
+## Create a data frame according to the specification
 
 ```{r}
 q2_df = tibble(
@@ -43,6 +53,8 @@ q2_df = tibble(
 
 q2_df
 ```
+## Explore how the mean function behaves on different data types
+
 The mean of the numerical vector and the logical vecctor can be computed successfully, which equal to `r mean(pull(q2_df, var=1))` and `r mean(pull(q2_df, var=2))`, respectively. However, R raises warnings when attempting to take the mean of the character vector and the factor vector and returns NAs:
 
 ```{r}
@@ -50,7 +62,9 @@ mean(pull(q2_df, var=3))
 mean(pull(q2_df, var=-1))
 ```
 
-Now attempt to apply the as.numeric() function to the logical, character, and factor variables;
+## Explore how numercal coercions behave on different data types 
+
+Codes below shoe attempts to apply the as.numeric() function to the logical, character, and factor variables;
 
 ```{r, eval=FALSE}
 as.numeric(q2_df$logical_vec)
@@ -58,7 +72,7 @@ as.numeric(q2_df$char_vec)
 as.numeric(q2_df$factor_vec)
 ```
 
-The as.numeric function turns the FALSE to 0 and TRUE to 1 in the logical vector. Therefore, R is able to successfully calculate its mean. The as.numeric function is not able to coerce character strings to numerical values. Therefore, it returns NAs. As a result, R turns NA when trying to calculate the mean of a character vector. As for the factor vector, the as.numeric function coerces the factor levels to positive integers by alphabetical order. However, elements in the factor elements themselves are neither logical or numeric values. Therefore, R cannot calculate its mean and return NA as shown above. However, after coercing the factor vector to a numerical vector, its mean can be computed as `r mean(as.numeric(q2_df$factor_vec))`.
+The as.numeric function turns the FALSE to 0 and TRUE to 1 in the logical vector. Therefore, R is able to successfully calculate its mean. The as.numeric function is not able to coerce character strings to numerical values. Therefore, it returns NAs. As a result, R turns NA when trying to calculate the mean of a character vector. As for the factor vector, the as.numeric function coerces the factor levels to positive integers by alphabetical order. However, elements in the factor elements themselves are neither logical or numeric values. Therefore, R cannot calculate its mean and return NA as shown in the previous subsection. However, after coercing the factor vector to a numerical vector, its mean can be computed as `r mean(as.numeric(q2_df$factor_vec))` as in the code above.
 
 
 
